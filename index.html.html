@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Al-Faqir Palace - The epitome of luxury wedding marquees and royal event experiences. Where dreams meet royalty.">
+  <meta name="theme-color" content="#D4AF37">
+  <title>Al-Faqir Palace | Luxury Wedding Marquee & Royal Events</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React and ReactDOM -->
+  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'cinzel': ['Cinzel', 'serif'],
+            'inter': ['Inter', 'sans-serif'],
+          },
+          colors: {
+            'gold': '#D4AF37',
+            'gold-dark': '#B8860B',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #FFFFFF;
+      overflow-x: hidden;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(105deg, #D4AF37 0%, #C5A028 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 35px -12px rgba(212, 175, 55, 0.5);
+    }
+    
+    .btn-outline-gold {
+      border: 2px solid #D4AF37;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-gold:hover {
+      background: #D4AF37;
+      color: #000;
+      transform: translateY(-2px);
+    }
+    
+    .navbar-glass {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+    }
+    
+    .hero-overlay {
+      background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.55) 100%);
+    }
+    
+    .service-card {
+      transition: all 0.4s cubic-bezier(0.2, 0.95, 0.4, 1.1);
+    }
+    
+    .service-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 30px 45px -20px rgba(212, 175, 55, 0.4);
+      border-color: #D4AF37 !important;
+    }
+    
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1rem;
+      cursor: pointer;
+    }
+    
+    .gallery-item img {
+      transition: transform 0.7s ease;
+    }
+    
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+    
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(212,175,55,0.3) 100%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1rem;
+    }
+    
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+    
+    .map-container {
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.2);
+    }
+    
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #D4AF37, #B8860B);
+      border-radius: 10px;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    (function() {
+      // Wait for React to load
+      if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+        setTimeout(arguments.callee, 100);
+        return;
+      }
+      
+      const { useState, useEffect } = React;
+      
+      // Navbar Component
+      const Navbar = () => {
+        const [isOpen, setIsOpen] = useState(false);
+        const [scrolled, setScrolled] = useState(false);
+        const [active, setActive] = useState('home');
+        
+        const navItems = [
+          { id: 'home', label: 'Home', icon: 'fas fa-home' },
+          { id: 'about', label: 'About', icon: 'fas fa-crown' },
+          { id: 'services', label: 'Services', icon: 'fas fa-star' },
+          { id: 'gallery', label: 'Gallery', icon: 'fas fa-image' },
+          { id: 'testimonials', label: 'Testimonials', icon: 'fas fa-comment' },
+          { id: 'contact', label: 'Contact', icon: 'fas fa-envelope' }
+        ];
+        
+        useEffect(() => {
+          const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
+            const scrollPos = window.scrollY + 200;
+            for (let i = navItems.length - 1; i >= 0; i--) {
+              const section = document.getElementById(navItems[i].id);
+              if (section && section.offsetTop <= scrollPos) {
+                setActive(navItems[i].id);
+                break;
+              }
+            }
+          };
+          window.addEventListener('scroll', handleScroll);
+          return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
+        
+        const scrollTo = (id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setIsOpen(false);
+          }
+        };
+        
+        return React.createElement('nav', {
+          className: `fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'navbar-glass shadow-md' : 'bg-transparent'}`
+        }, React.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4" }, [
+          React.createElement('div', { key: 'flex', className: "flex justify-between items-center" }, [
+            React.createElement('button', { key: 'logo', onClick: () => scrollTo('home'), className: "group focus:outline-none flex items-center gap-2" }, [
+              React.createElement('i', { key: 'icon', className: "fas fa-crown text-2xl text-[#D4AF37] group-hover:scale-110 transition-transform" }),
+              React.createElement('span', { key: 'text', className: "text-xl md:text-2xl font-cinzel font-bold bg-gradient-to-r from-[#D4AF37] via-yellow-500 to-[#B8860B] bg-clip-text text-transparent" }, "Al-Faqir Palace")
+            ]),
+            React.createElement('div', { key: 'desktop', className: "hidden lg:flex items-center gap-6" }, [
+              ...navItems.map(item => 
+                React.createElement('button', { key: item.id, onClick: () => scrollTo(item.id), className: `flex items-center gap-2 text-sm font-medium transition-all duration-300 ${active === item.id ? 'text-[#D4AF37]' : 'text-gray-700 hover:text-[#D4AF37]'}` }, [
+                  React.createElement('i', { key: 'icon', className: item.icon }),
+                  React.createElement('span', { key: 'label' }, item.label)
+                ])
+              ),
+              React.createElement('button', { key: 'book', onClick: () => scrollTo('contact'), className: "btn-primary text-black font-bold px-5 py-2 rounded-full shadow-md hover:shadow-xl transition-all flex items-center gap-2" }, [
+                React.createElement('i', { key: 'icon', className: "far fa-calendar-check" }),
+                React.createElement('span', { key: 'text' }, "Book Now")
+              ])
+            ]),
+            React.createElement('button', { key: 'mobile-btn', onClick: () => setIsOpen(!isOpen), className: "lg:hidden text-2xl text-gray-800 focus:outline-none hover:text-[#D4AF37] transition-colors" }, 
+              React.createElement('i', { className: isOpen ? "fas fa-times" : "fas fa-bars" })
+            )
+          ]),
+          isOpen && React.createElement('div', { key: 'mobile-menu', className: "lg:hidden mt-4 pb-4 space-y-2" }, [
+            ...navItems.map(item =>
+              React.createElement('button', { key: item.id, onClick: () => scrollTo(item.id), className: `flex items-center gap-3 w-full px-4 py-3 text-left rounded-xl transition-all ${active === item.id ? 'bg-[#D4AF37]/10 text-[#D4AF37] border-l-4 border-[#D4AF37]' : 'text-gray-700 hover:bg-gray-50'}` }, [
+                React.createElement('i', { key: 'icon', className: item.icon }),
+                React.createElement('span', { key: 'label', className: "font-medium" }, item.label)
+              ])
+            ),
+            React.createElement('button', { key: 'mobile-book', onClick: () => scrollTo('contact'), className: "btn-primary w-full text-black font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2" }, [
+              React.createElement('i', { key: 'icon', className: "far fa-calendar-check" }),
+              React.createElement('span', { key: 'text' }, "Book Your Event")
+            ])
+          ])
+        ]));
+      };
+      
+      // Hero Component
+      const Hero = () => {
+        return React.createElement('section', { id: 'home', className: "relative h-screen flex items-center justify-center overflow-hidden" }, [
+          React.createElement('div', { key: 'bg', className: "absolute inset-0" }, [
+            React.createElement('img', {
+              src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+              alt: "Luxury Wedding Marquee",
+              className: "w-full h-full object-cover"
+            }),
+            React.createElement('div', { className: "hero-overlay absolute inset-0" })
+          ]),
+          React.createElement('div', { key: 'content', className: "relative z-10 text-center px-6 max-w-6xl mx-auto" }, [
+            React.createElement('h1', { className: "text-5xl md:text-7xl lg:text-8xl font-bold text-white font-cinzel tracking-wide drop-shadow-2xl leading-tight" }, 
+              "Where Dreams Meet", React.createElement('br', {}), "Royalty"
+            ),
+            React.createElement('p', { className: "text-xl md:text-2xl text-gray-100 mt-6 max-w-2xl mx-auto font-light" }, 
+              "Luxury Wedding Marquee & Royal Event Experience"
+            ),
+            React.createElement('div', { className: "flex flex-col sm:flex-row gap-5 justify-center mt-10" }, [
+              React.createElement('button', {
+                key: 'explore',
+                onClick: () => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }),
+                className: "btn-outline-gold text-white font-semibold px-8 py-3 rounded-full hover:bg-[#D4AF37] hover:text-black transition-all duration-300 text-lg"
+              }, "Explore Services"),
+              React.createElement('button', {
+                key: 'book',
+                onClick: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }),
+                className: "btn-primary text-black font-bold px-9 py-3 rounded-full shadow-xl text-lg flex items-center gap-2"
+              }, [
+                React.createElement('i', { key: 'icon', className: "far fa-calendar-check" }),
+                React.createElement('span', { key: 'text' }, "Book Your Event")
+              ])
+            ])
+          ])
+        ]);
+      };
+      
+      // About Component
+      const About = () => {
+        return React.createElement('section', { id: 'about', className: "py-28 px-6 bg-white" }, 
+          React.createElement('div', { className: "max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center" }, [
+            React.createElement('div', { key: 'img', className: "order-2 md:order-1" }, [
+              React.createElement('img', { 
+                src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80", 
+                className: "rounded-2xl shadow-2xl w-full", 
+                alt: "Luxury Setup" 
+              })
+            ]),
+            React.createElement('div', { key: 'text', className: "order-1 md:order-2 space-y-6" }, [
+              React.createElement('div', { className: "w-20 h-1 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] rounded-full" }),
+              React.createElement('h2', { className: "text-4xl md:text-5xl font-cinzel font-bold text-gray-900" }, "Timeless Elegance"),
+              React.createElement('p', { className: "text-gray-600 text-lg leading-relaxed" }, 
+                "Al-Faqir Palace delivers premium marquee setups for weddings, events, and royal gatherings. With meticulous attention to detail, opulent decor, and flawless execution, we transform your vision into an unforgettable celebration. Every event is a masterpiece of luxury and sophistication."
+              ),
+              React.createElement('div', { className: "flex items-center gap-3" }, [
+                React.createElement('i', { className: "fas fa-crown text-3xl text-[#D4AF37]" }),
+                React.createElement('span', { className: "font-semibold text-gray-800" }, "20+ Years of Royal Excellence")
+              ])
+            ])
+          ])
+        );
+      };
+      
+      // Services Component
+      const services = [
+        { icon: "🏰", title: "Wedding Marquee", desc: "Grand structures with crystal chandeliers and floral extravaganza." },
+        { icon: "🏛️", title: "Corporate Events", desc: "Sophisticated setups for galas, product launches, and conferences." },
+        { icon: "🌺", title: "Mehndi & Barat", desc: "Vibrant traditional themes with luxury seating and stage design." },
+        { icon: "✨", title: "Lighting & Decor", desc: "Custom lighting designs, fairy drapes, and premium gold accents." },
+        { icon: "🪑", title: "VIP Seating", desc: "Plush royal sofas, gold chiavari chairs, exclusive lounges." },
+        { icon: "🎭", title: "Stage Design", desc: "Bespoke stages with floral backdrops and dramatic curtains." }
+      ];
+      
+      const Services = () => {
+        return React.createElement('section', { id: 'services', className: "py-28 px-6 bg-gray-50" },
+          React.createElement('div', { className: "max-w-7xl mx-auto" }, [
+            React.createElement('div', { className: "text-center mb-16" }, [
+              React.createElement('h2', { className: "text-4xl md:text-5xl font-cinzel font-bold text-gray-900" }, "Our Signature Services"),
+              React.createElement('div', { className: "w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] mx-auto mt-4 rounded-full" }),
+              React.createElement('p', { className: "text-gray-500 mt-4" }, "Crafting bespoke experiences with royal grandeur")
+            ]),
+            React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" },
+              services.map((s, idx) => 
+                React.createElement('div', { key: idx, className: "service-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 cursor-pointer hover:border-[#D4AF37]" }, [
+                  React.createElement('div', { className: "text-5xl mb-5" }, s.icon),
+                  React.createElement('h3', { className: "text-2xl font-bold font-cinzel text-gray-800 mb-3" }, s.title),
+                  React.createElement('p', { className: "text-gray-500 leading-relaxed" }, s.desc)
+                ])
+              )
+            )
+          ])
+        );
+      };
+      
+      // Gallery Component
+      const galleryImages = [
+        "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1606213654475-9f6bc112da27?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      ];
+      
+      const Gallery = () => {
+        return React.createElement('section', { id: 'gallery', className: "py-28 px-6 bg-white" },
+          React.createElement('div', { className: "max-w-7xl mx-auto" }, [
+            React.createElement('div', { className: "text-center mb-16" }, [
+              React.createElement('h2', { className: "text-4xl md:text-5xl font-cinzel font-bold text-gray-900" }, "Captured Moments"),
+              React.createElement('div', { className: "w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] mx-auto mt-4 rounded-full" })
+            ]),
+            React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-3 gap-6" },
+              galleryImages.map((img, idx) =>
+                React.createElement('div', { key: idx, className: "gallery-item rounded-2xl overflow-hidden shadow-lg" }, [
+                  React.createElement('img', { src: img, alt: "Gallery", className: "w-full h-80 object-cover" }),
+                  React.createElement('div', { className: "gallery-overlay" }, [
+                    React.createElement('div', { className: "text-center text-white" }, [
+                      React.createElement('i', { className: "far fa-heart text-3xl mb-2" }),
+                      React.createElement('p', { className: "font-cinzel text-lg" }, "Royal Elegance")
+                    ])
+                  ])
+                ])
+              )
+            )
+          ])
+        );
+      };
+      
+      // Testimonials Component
+      const testimonials = [
+        { name: "Fatima & Ali", text: "Absolutely breathtaking! The marquee setup was beyond our dreams. Every guest was in awe of the royal ambiance.", rating: 5 },
+        { name: "Mr. & Mrs. Khan", text: "The gold decor, lighting, and hospitality were exceptional. Truly a royal experience that we'll cherish forever.", rating: 5 },
+        { name: "Sophia & James", text: "Professional team, stunning execution, and impeccable taste. Made our wedding truly unforgettable.", rating: 5 }
+      ];
+      
+      const Testimonials = () => {
+        return React.createElement('section', { id: 'testimonials', className: "py-28 px-6 bg-gray-50" },
+          React.createElement('div', { className: "max-w-6xl mx-auto text-center" }, [
+            React.createElement('h2', { className: "text-4xl md:text-5xl font-cinzel font-bold text-gray-900" }, "Royal Impressions"),
+            React.createElement('div', { className: "w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] mx-auto mt-4 mb-12 rounded-full" }),
+            React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-3 gap-8" },
+              testimonials.map((t, idx) =>
+                React.createElement('div', { key: idx, className: "bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-shadow" }, [
+                  React.createElement('div', { className: "flex text-[#D4AF37] mb-4 justify-center gap-1" }, 
+                    [...Array(5)].map((_, i) => React.createElement('i', { key: i, className: "fas fa-star" }))
+                  ),
+                  React.createElement('p', { className: "text-gray-600 italic mb-6 leading-relaxed" }, `"${t.text}"`),
+                  React.createElement('h4', { className: "font-cinzel font-bold text-xl text-gray-800" }, t.name)
+                ])
+              )
+            )
+          ])
+        );
+      };
+      
+      // CTA Banner
+      const CTABanner = () => {
+        return React.createElement('section', { className: "bg-black py-24 px-6" },
+          React.createElement('div', { className: "max-w-4xl mx-auto text-center" }, [
+            React.createElement('h2', { className: "text-4xl md:text-6xl font-cinzel font-bold text-white mb-6" }, "Make Your Event Unforgettable"),
+            React.createElement('button', {
+              onClick: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }),
+              className: "btn-primary text-black font-bold py-4 px-12 rounded-full text-xl shadow-2xl hover:scale-105 transition-all flex items-center gap-3 mx-auto"
+            }, [
+              React.createElement('i', { key: 'icon', className: "far fa-calendar-check" }),
+              React.createElement('span', { key: 'text' }, "Book Your Royal Experience")
+            ])
+          ])
+        );
+      };
+      
+      // Contact Component with Map
+      const Contact = () => {
+        const [formData, setFormData] = useState({ name: '', phone: '', eventDate: '', message: '' });
+        const [submitted, setSubmitted] = useState(false);
+        
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          setSubmitted(true);
+          setFormData({ name: '', phone: '', eventDate: '', message: '' });
+          setTimeout(() => setSubmitted(false), 4000);
+        };
+        
+        return React.createElement('section', { id: 'contact', className: "py-28 px-6 bg-white" },
+          React.createElement('div', { className: "max-w-7xl mx-auto grid lg:grid-cols-2 gap-12" }, [
+            React.createElement('div', { key: 'info' }, [
+              React.createElement('h2', { className: "text-4xl font-cinzel font-bold text-gray-900 mb-4" }, "Let's Plan Your Royal Affair"),
+              React.createElement('div', { className: "w-20 h-1 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] mb-8 rounded-full" }),
+              React.createElement('div', { className: "space-y-4 mb-8" }, [
+                React.createElement('div', { className: "flex items-center gap-4 p-4 bg-gray-50 rounded-xl" }, [
+                  React.createElement('i', { className: "fas fa-phone text-2xl text-[#D4AF37]" }),
+                  React.createElement('div', {}, [
+                    React.createElement('p', { className: "font-semibold text-gray-800" }, "Call Us"),
+                    React.createElement('p', { className: "text-gray-600" }, "+92 300 123 4567")
+                  ])
+                ]),
+                React.createElement('div', { className: "flex items-center gap-4 p-4 bg-gray-50 rounded-xl" }, [
+                  React.createElement('i', { className: "fas fa-location-dot text-2xl text-[#D4AF37]" }),
+                  React.createElement('div', {}, [
+                    React.createElement('p', { className: "font-semibold text-gray-800" }, "Visit Us"),
+                    React.createElement('p', { className: "text-gray-600" }, "Royal Palm Estate, Lahore, Pakistan")
+                  ])
+                ]),
+                React.createElement('div', { className: "flex items-center gap-4 p-4 bg-gray-50 rounded-xl" }, [
+                  React.createElement('i', { className: "fas fa-envelope text-2xl text-[#D4AF37]" }),
+                  React.createElement('div', {}, [
+                    React.createElement('p', { className: "font-semibold text-gray-800" }, "Email Us"),
+                    React.createElement('p', { className: "text-gray-600" }, "hello@alfaqirpalace.com")
+                  ])
+                ])
+              ]),
+              React.createElement('div', { className: "map-container" }, [
+                React.createElement('iframe', {
+                  src: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d217544.64113512263!2d74.17224115000001!3d31.48280355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e4a07ffb%3A0xdb86c2c4ebd1dbe0!2sLahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s",
+                  width: "100%",
+                  height: "280",
+                  style: { border: 0, borderRadius: "1rem" },
+                  allowFullScreen: "",
+                  loading: "lazy",
+                  title: "Al-Faqir Palace Location"
+                })
+              ])
+            ]),
+            React.createElement('form', { key: 'form', onSubmit: handleSubmit, className: "bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-xl border border-gray-100" }, [
+              React.createElement('h3', { className: "text-2xl font-bold mb-6 font-cinzel text-gray-800 flex items-center gap-2" }, [
+                React.createElement('i', { className: "far fa-pen-to-square text-[#D4AF37]" }),
+                React.createElement('span', {}, "Send Inquiry")
+              ]),
+              React.createElement('div', { className: "space-y-4" }, [
+                React.createElement('input', {
+                  type: "text", placeholder: "Full Name", required: true,
+                  value: formData.name,
+                  onChange: (e) => setFormData({ ...formData, name: e.target.value }),
+                  className: "w-full p-4 border border-gray-200 rounded-xl focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition"
+                }),
+                React.createElement('input', {
+                  type: "tel", placeholder: "Phone Number", required: true,
+                  value: formData.phone,
+                  onChange: (e) => setFormData({ ...formData, phone: e.target.value }),
+                  className: "w-full p-4 border border-gray-200 rounded-xl focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition"
+                }),
+                React.createElement('input', {
+                  type: "date", required: true,
+                  value: formData.eventDate,
+                  onChange: (e) => setFormData({ ...formData, eventDate: e.target.value }),
+                  className: "w-full p-4 border border-gray-200 rounded-xl focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition"
+                }),
+                React.createElement('textarea', {
+                  placeholder: "Tell us about your dream event...", rows: "4", required: true,
+                  value: formData.message,
+                  onChange: (e) => setFormData({ ...formData, message: e.target.value }),
+                  className: "w-full p-4 border border-gray-200 rounded-xl focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 outline-none transition"
+                }),
+                React.createElement('button', { type: "submit", className: "btn-primary w-full text-black font-bold py-4 rounded-xl shadow-md hover:shadow-xl transition-all text-lg flex items-center justify-center gap-2" }, [
+                  React.createElement('i', { className: "far fa-paper-plane" }),
+                  React.createElement('span', {}, "Request a Quote")
+                ]),
+                submitted && React.createElement('p', { className: "text-green-600 text-center font-medium mt-2" }, "✓ Inquiry sent! Our team will contact you soon.")
+              ])
+            ])
+          ])
+        );
+      };
+      
+      // Footer Component
+      const Footer = () => {
+        const scrollTo = (id) => {
+          document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        };
+        
+        return React.createElement('footer', { className: "bg-gray-900 text-gray-300 pt-16 pb-8 px-6" }, [
+          React.createElement('div', { className: "max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-gray-800 pb-12" }, [
+            React.createElement('div', { key: 'brand' }, [
+              React.createElement('div', { className: "flex items-center gap-2 mb-4" }, [
+                React.createElement('i', { className: "fas fa-crown text-2xl text-[#D4AF37]" }),
+                React.createElement('h3', { className: "text-2xl font-cinzel font-bold text-white" }, "Al-Faqir Palace")
+              ]),
+              React.createElement('p', { className: "text-sm text-gray-400" }, "Luxury wedding marquees & royal event experiences. Where dreams meet royalty.")
+            ]),
+            React.createElement('div', { key: 'quick' }, [
+              React.createElement('h4', { className: "font-semibold text-white mb-4" }, "Quick Links"),
+              React.createElement('ul', { className: "space-y-2" }, 
+                ['Home', 'About', 'Services', 'Gallery', 'Contact'].map(link => 
+                  React.createElement('li', { key: link }, 
+                    React.createElement('button', { onClick: () => scrollTo(link.toLowerCase()), className: "hover:text-[#D4AF37] transition" }, link)
+                  )
+                )
+              )
+            ]),
+            React.createElement('div', { key: 'hours' }, [
+              React.createElement('h4', { className: "font-semibold text-white mb-4" }, "Working Hours"),
+              React.createElement('p', {}, "Monday - Sunday: 9:00 AM - 10:00 PM"),
+              React.createElement('p', { className: "text-[#D4AF37] mt-2" }, "Available 24/7 for inquiries")
+            ]),
+            React.createElement('div', { key: 'social' }, [
+              React.createElement('h4', { className: "font-semibold text-white mb-4" }, "Follow Us"),
+              React.createElement('div', { className: "flex gap-4 text-2xl" }, 
+                ['facebook', 'instagram', 'twitter', 'youtube'].map(social => 
+                  React.createElement('i', { key: social, className: `fab fa-${social} cursor-pointer hover:text-[#D4AF37] hover:scale-110 transition-all` })
+                )
+              )
+            ])
+          ]),
+          React.createElement('div', { className: "max-w-7xl mx-auto pt-8 text-center text-sm text-gray-500" }, [
+            React.createElement('p', {}, `© ${new Date().getFullYear()} Al-Faqir Palace. All Rights Reserved. | Crafted with Royalty`)
+          ])
+        ]);
+      };
+      
+      // Main App Component
+      const App = () => {
+        return React.createElement('div', { className: "overflow-x-hidden" }, [
+          React.createElement(Navbar, { key: 'navbar' }),
+          React.createElement(Hero, { key: 'hero' }),
+          React.createElement(About, { key: 'about' }),
+          React.createElement(Services, { key: 'services' }),
+          React.createElement(Gallery, { key: 'gallery' }),
+          React.createElement(Testimonials, { key: 'testimonials' }),
+          React.createElement(CTABanner, { key: 'cta' }),
+          React.createElement(Contact, { key: 'contact' }),
+          React.createElement(Footer, { key: 'footer' })
+        ]);
+      };
+      
+      // Render the app
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(React.createElement(App));
+    })();
+  </script>
+</body>
+</html>
